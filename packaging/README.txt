@@ -10,7 +10,7 @@ Nothing to install - Python and everything else is built into the .exe.
 
 HOW TO RUN
 ----------
-1. Unzip this package anywhere you like (for example C:\Apps\SystemWidget).
+1. Unzip this package anywhere you like (for example C:\Users\You\SystemWidget).
 2. Double-click SystemWidget.exe.
    The widget appears in the bottom-right corner, above the taskbar.
 
