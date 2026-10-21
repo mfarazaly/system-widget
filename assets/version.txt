@@ -14,12 +14,12 @@ VSVersionInfo(
       StringTable('040904B0', [
         StringStruct('CompanyName', 'M Faraz Ali'),
         StringStruct('FileDescription', 'System Widget - CPU, RAM, GPU, network and power monitor'),
-        StringStruct('FileVersion', '1.2.9.0'),
+        StringStruct('FileVersion', '1.2.10.0'),
         StringStruct('InternalName', 'SystemWidget'),
         StringStruct('LegalCopyright', 'Copyright (c) 2026 M Faraz Ali'),
         StringStruct('OriginalFilename', 'SystemWidget.exe'),
         StringStruct('ProductName', 'System Widget'),
-        StringStruct('ProductVersion', '1.2.9.0')
+        StringStruct('ProductVersion', '1.2.10.0')
       ])
     ]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])

@@ -13,7 +13,7 @@
   <Package
       Name="System Widget"
       Manufacturer="M Faraz Ali"
-      Version="1.2.9"
+      Version="1.2.10"
       UpgradeCode="D6CCE302-755D-4497-A506-D8286E222889"
       Language="1033"
       Scope="perUser"

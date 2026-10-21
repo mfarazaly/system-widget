@@ -1,4 +1,4 @@
-System Widget 1.2.9
+System Widget 1.2.10
 =================
 
 A small always-on-top desktop widget for Windows that shows:

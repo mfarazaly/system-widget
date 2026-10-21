@@ -180,7 +180,7 @@ def _is_cloaked(window: int) -> bool:
 # --------------------------------------------------------------------------- #
 
 APP_NAME = "SystemWidget"
-VERSION = "1.2.9"
+VERSION = "1.2.10"
 CREATED = "20 October 2026"
 DEVELOPER = "M Faraz Ali"
 EMAIL = "mfarazaly@gmail.com"
@@ -797,7 +797,7 @@ class AboutDialog(tk.Toplevel):
             self.canvas.tag_bind(item, "<Leave>", lambda _e, i=close_bg: self.canvas.itemconfigure(i, fill="#1b2230"))
 
         # position over the widget, clamped to the work area
-        left, top, right, bottom = parent._work_area()
+        left, top, right, bottom = parent._bounds()
         x = parent.winfo_x() + (parent.winfo_width() - W) // 2
         y = parent.winfo_y() + (parent.winfo_height() - H) // 2
         x = max(left, min(x, right - W))
@@ -835,7 +835,14 @@ class AboutDialog(tk.Toplevel):
             self.grab_release()
         except tk.TclError:
             pass
-        self.destroy()
+        # Forget the card in the parent, or the next "About" click would call
+        # winfo_exists() on a destroyed window and fail before it could reopen.
+        if getattr(self.parent, "_about", None) is self:
+            self.parent._about = None
+        try:
+            self.destroy()
+        except tk.TclError:
+            pass
 
 
 class PopupMenu(tk.Toplevel):
@@ -2131,15 +2138,27 @@ class Widget(tk.Tk):
     # --------------------------------------------------------------- about --
 
     def show_about(self) -> None:
-        if self._about is not None and self._about.winfo_exists():
-            self._about.lift()
-            return
+        about = self._about
+        if about is not None:
+            try:
+                alive = bool(about.winfo_exists())
+            except tk.TclError:
+                alive = False
+            if alive:
+                about.lift()
+                about.focus_force()
+                return
+            self._about = None
         self._about = AboutDialog(self)
 
     def _close_about(self) -> None:
-        if self._about is not None and self._about.winfo_exists():
-            self._about.close()
-        self._about = None
+        about, self._about = self._about, None
+        if about is None:
+            return
+        try:
+            about.close()
+        except tk.TclError:
+            pass
 
     # --------------------------------------------------------------- menu ----
 

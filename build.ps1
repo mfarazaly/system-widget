@@ -1,7 +1,7 @@
 # Builds:
 #   dist\SystemWidget.exe              (one-file standalone executable)
-#   dist\SystemWidget-1.2.9-win64.zip    (portable: exe + README)
-#   dist\SystemWidget-1.2.9-win64.msi    (installer, built when WiX is present)
+#   dist\SystemWidget-1.2.10-win64.zip    (portable: exe + README)
+#   dist\SystemWidget-1.2.10-win64.msi    (installer, built when WiX is present)
 #
 # Usage:  powershell -ExecutionPolicy Bypass -File build.ps1
 
@@ -28,7 +28,7 @@ if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed" }
 
 Copy-Item "$root\packaging\README.txt" "$root\dist\README.txt" -Force
 
-$zip = "$root\dist\SystemWidget-1.2.9-win64.zip"
+$zip = "$root\dist\SystemWidget-1.2.10-win64.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path "$root\dist\SystemWidget.exe", "$root\dist\README.txt" `
     -DestinationPath $zip -CompressionLevel Optimal
@@ -44,7 +44,7 @@ Write-Host "  $zip"
 #     wix extension add -g WixToolset.UI.wixext/5.0.2
 $wix = Join-Path $env:USERPROFILE ".dotnet\tools\wix.exe"
 if (Test-Path $wix) {
-    $msi = "$root\dist\SystemWidget-1.2.9-win64.msi"
+    $msi = "$root\dist\SystemWidget-1.2.10-win64.msi"
     if (Test-Path $msi) { Remove-Item $msi -Force }
     & $wix build "$root\installer\SystemWidget.wxs" `
         -ext WixToolset.UI.wixext `

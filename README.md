@@ -24,7 +24,7 @@ glance.
 
 ## Run it
 
-**Installer (recommended)** — `SystemWidget-1.2.9-win64.msi` from the
+**Installer (recommended)** — `SystemWidget-1.2.10-win64.msi` from the
 [Releases page](https://github.com/mfarazaly/system-widget/releases):
 
 1. Double-click the MSI.
@@ -37,7 +37,7 @@ saved settings in `%APPDATA%` are kept so a re-install picks up where you left.
 
 **Standalone (no Python needed)** — for sharing with anyone on Windows 10/11 (64-bit):
 
-1. Download `SystemWidget-1.2.9-win64.zip` from the same Releases page.
+1. Download `SystemWidget-1.2.10-win64.zip` from the same Releases page.
 2. Unzip it anywhere and double-click **`SystemWidget.exe`**
 
 Python, psutil and tkinter are bundled inside the exe (~11 MB). On first run
@@ -308,8 +308,8 @@ Saved settings live in `%APPDATA%\SystemWidget\settings.json`:
 | File                          | Purpose                                                |
 | ----------------------------- | ------------------------------------------------------ |
 | `SystemWidget.pyw`            | The widget (single file, no dependencies beyond psutil) |
-| `dist\SystemWidget-1.2.9-win64.msi` | **Installer** (per-user, Start Menu + desktop shortcut) |
-| `dist\SystemWidget-1.2.9-win64.zip` | **Portable package** (exe + README.txt)             |
+| `SystemWidget-1.2.10-win64.msi` | **Installer** — build output, attached to the release    |
+| `SystemWidget-1.2.10-win64.zip` | **Portable package** — build output, attached to the release |
 | `installer\SystemWidget.wxs`  | WiX source for the MSI                                 |
 | `installer\license.rtf`       | License text shown by the installer                    |
 | `installer\make_bitmaps.py`   | Regenerates the installer banner / panel art           |
@@ -328,7 +328,7 @@ After editing `SystemWidget.pyw`:
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-This produces `dist\SystemWidget.exe` and `dist\SystemWidget-1.2.9-win64.zip`
+This produces `dist\SystemWidget.exe` and `dist\SystemWidget-1.2.10-win64.zip`
 (PyInstaller one-file build, icon + version info embedded). Delete the `build\`
 folder afterwards if you want to save space — it is only build scratch data.
 
@@ -341,9 +341,19 @@ dotnet tool install --global wix --version 5.0.2
 wix extension add -g WixToolset.UI.wixext/5.0.2
 ```
 
-`build.ps1` then also produces `dist\SystemWidget-1.2.9-win64.msi`. To build it
+`build.ps1` then also produces `dist\SystemWidget-1.2.10-win64.msi`. To build it
 alone, run from the repo root:
 
 ```powershell
-wix build installer\SystemWidget.wxs -ext WixToolset.UI.wixext -o dist\SystemWidget-1.2.9-win64.msi
+wix build installer\SystemWidget.wxs -ext WixToolset.UI.wixext -o dist\SystemWidget-1.2.10-win64.msi
 ```
+
+## Licence
+
+Copyright © 2026 M Faraz Ali. All rights reserved.
+
+This repository and the ready-made installers are published **for reference and
+personal use only**. No permission is granted to copy, modify, redistribute or
+republish the project, in whole or in part, without written permission.
+
+Downloading a release and running the widget on your own machines is fine.
