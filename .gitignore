@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# PyInstaller
+build/
+dist/
+*.spec
+*.manifest
+
+# WiX
+*.wixpdb
+*.wixobj
+*.msi
+*.wixlib
+
+# Local / IDE
+.venv/
+venv/
+.vscode/
+.idea/
+*.log
+*.bak
+*.tmp
+
+# Editor scratch
+Thumbs.db
+desktop.ini

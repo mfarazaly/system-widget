@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  System Widget installer (per-user, no admin rights needed).
+
+  Build:
+      wix build installer\SystemWidget.wxs -ext WixToolset.UI.wixext ^
+          -o dist\SystemWidget-1.0-win64.msi
+-->
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package
+      Name="System Widget"
+      Manufacturer="M Faraz Ali"
+      Version="1.2.9"
+      UpgradeCode="D6CCE302-755D-4497-A506-D8286E222889"
+      Language="1033"
+      Scope="perUser"
+      Compressed="yes">
+
+    <SummaryInformation
+        Description="System Widget - a tiny desktop monitor for CPU, RAM, GPU, network and power"
+        Manufacturer="M Faraz Ali" />
+
+    <MajorUpgrade
+        DowngradeErrorMessage="A newer version of System Widget is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <!-- Per-user install: no admin rights, no UAC prompt.  ALLUSERS=2 plus
+         MSIINSTALLPERUSER=1 keeps it per-user even if started elevated. -->
+    <Property Id="ALLUSERS" Value="2" />
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+
+    <Icon Id="AppIcon" SourceFile="assets\icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch System Widget" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+    <ui:WixUI Id="WixUI_Minimal" />
+    <WixVariable Id="WixUILicenseRtf" Value="installer\license.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="installer\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="installer\dialog.bmp" />
+
+    <!-- %LOCALAPPDATA%\Programs\SystemWidget -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="SystemWidget" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppMenuFolder" Name="System Widget" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <ComponentGroup Id="AppFiles">
+      <Component Id="MainExe" Directory="INSTALLFOLDER" Guid="*">
+        <File Id="SystemWidgetExe" Source="dist\SystemWidget.exe" KeyPath="yes" />
+      </Component>
+
+      <Component Id="ReadmeFile" Directory="INSTALLFOLDER" Guid="*">
+        <File Id="ReadmeTxt" Source="packaging\README.txt" />
+      </Component>
+
+      <Component Id="StartMenuShortcut" Directory="AppMenuFolder" Guid="*">
+        <Shortcut Id="StartMenuSC"
+                  Name="System Widget"
+                  Description="CPU, RAM, GPU, network and power at a glance"
+                  Target="[INSTALLFOLDER]SystemWidget.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RemoveFolder Id="RemoveAppMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\M Faraz Ali\SystemWidget"
+                       Name="StartMenu" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+        <Shortcut Id="DesktopSC"
+                  Name="System Widget"
+                  Description="CPU, RAM, GPU, network and power at a glance"
+                  Target="[INSTALLFOLDER]SystemWidget.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\M Faraz Ali\SystemWidget"
+                       Name="Desktop" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="Main" Title="System Widget" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+    </Feature>
+
+    <CustomAction Id="LaunchApp"
+                  FileRef="SystemWidgetExe"
+                  ExeCommand=""
+                  Impersonate="yes"
+                  Return="asyncNoWait" />
+
+    <!-- A running SystemWidget.exe keeps the file locked, and the one-file
+         bootloader has no window for Windows Installer's "close applications"
+         to talk to, so upgrades used to pop up a "files in use" warning.
+         Stop it before the install transaction starts; the exit dialog
+         launches the new build again. -->
+    <CustomAction Id="StopWidget"
+                  Directory="SystemFolder"
+                  ExeCommand="taskkill.exe /F /IM SystemWidget.exe"
+                  Execute="immediate"
+                  Return="ignore" />
+
+    <InstallExecuteSequence>
+      <Custom Action="StopWidget" Before="InstallValidate" />
+    </InstallExecuteSequence>
+
+    <UI>
+      <Publish Dialog="ExitDialog" Control="Finish"
+               Event="DoAction" Value="LaunchApp"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT REMOVE" />
+    </UI>
+
+  </Package>
+</Wix>
